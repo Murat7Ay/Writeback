@@ -1,0 +1,54 @@
+# Publishes the Writeback packages to nuget.org with Trusted Publishing (no stored API key).
+# Trigger: push a tag such as v0.1.0. One-time setup is described in docs/RELEASING.md.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: nuget
+    permissions:
+      contents: read
+      id-token: write   # lets the job request a GitHub OIDC token for nuget.org
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Check that the tag matches the project version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          if [ "$tag" != "$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match <Version>$version</Version> in Directory.Build.props"
+            exit 1
+          fi
+
+      - run: dotnet build Writeback.slnx -c Release
+      - run: dotnet test --project tests/Writeback.Tests -c Release --no-build
+      - run: dotnet pack Writeback.slnx -c Release --no-build -o artifacts
+
+      - name: NuGet login (OIDC -> short-lived API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}   # nuget.org profile name, not the email address
+
+      - name: Push to nuget.org
+        run: >
+          dotnet nuget push "artifacts/*.nupkg"
+          --api-key "${{ steps.login.outputs.NUGET_API_KEY }}"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/

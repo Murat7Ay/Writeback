@@ -159,6 +159,7 @@ Methodology, tables and caveats are in [docs/BENCHMARKS.md](https://github.com/M
 | [Recipes](https://github.com/Murat7Ay/Writeback/blob/master/docs/examples/RECIPES.md) | aggregates, many-to-many, paging, upsert, type handlers, DI, bulk |
 | [Benchmarks](https://github.com/Murat7Ay/Writeback/blob/master/docs/BENCHMARKS.md) | raw Dapper vs Writeback vs EF Core |
 | [Migration](https://github.com/Murat7Ay/Writeback/blob/master/docs/MIGRATION.md) | from the original 2017 DapperHelper API |
+| [Releasing](https://github.com/Murat7Ay/Writeback/blob/master/docs/RELEASING.md) | publishing to nuget.org with Trusted Publishing |
 
 ## Building and testing
 
