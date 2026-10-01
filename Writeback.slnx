@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Writeback.Benchmarks/Writeback.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/Writeback.Samples/Writeback.Samples.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Writeback.PostgreSql/Writeback.PostgreSql.csproj" />
+    <Project Path="src/Writeback.SqlServer/Writeback.SqlServer.csproj" />
+    <Project Path="src/Writeback/Writeback.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Writeback.IntegrationTests/Writeback.IntegrationTests.csproj" />
+    <Project Path="tests/Writeback.Tests/Writeback.Tests.csproj" />
+  </Folder>
+</Solution>

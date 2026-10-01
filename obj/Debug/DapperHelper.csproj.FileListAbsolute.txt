@@ -1,7 +1,0 @@
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\obj\Debug\DapperHelper.csprojResolveAssemblyReference.cache
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\bin\Debug\DapperHelper.dll
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\bin\Debug\DapperHelper.pdb
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\bin\Debug\Dapper.dll
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\bin\Debug\Dapper.xml
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\obj\Debug\DapperHelper.dll
-c:\users\muratay\documents\visual studio 2015\Projects\Github\DapperHelper\obj\Debug\DapperHelper.pdb

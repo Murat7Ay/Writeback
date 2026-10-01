@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-retries 20
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: mysql
+          MYSQL_DATABASE: dx
+        ports: ["3306:3306"]
+        options: --health-cmd "mysqladmin ping -pmysql" --health-interval 5s --health-retries 30
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Dx_Strong_Passw0rd!"
+        ports: ["1433:1433"]
+    env:
+      WRITEBACK_POSTGRES: Host=localhost;Username=postgres;Password=postgres;Database=postgres
+      WRITEBACK_MYSQL: Server=localhost;User ID=root;Password=mysql;Database=dx
+      WRITEBACK_SQLSERVER: Server=localhost;User ID=sa;Password=Dx_Strong_Passw0rd!;TrustServerCertificate=true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - run: dotnet build Writeback.slnx -c Release
+      - run: dotnet test --project tests/Writeback.Tests -c Release --no-build
+      - name: Wait for SQL Server
+        run: |
+          for i in $(seq 1 60); do
+            docker exec $(docker ps -qf ancestor=mcr.microsoft.com/mssql/server:2022-latest) \
+              /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'Dx_Strong_Passw0rd!' -Q 'SELECT 1' && break
+            sleep 2
+          done
+      - run: dotnet test --project tests/Writeback.IntegrationTests -c Release --no-build
