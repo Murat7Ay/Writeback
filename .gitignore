@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+TestResults/
+BenchmarkDotNet.Artifacts/
+artifacts/
+*.db
